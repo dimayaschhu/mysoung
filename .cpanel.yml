@@ -1,5 +1,5 @@
 deployment:
 tasks:
   - export DEPLOYPATH=/home/mysoundf/www
-  - /bin/cp -R /home/mysoundf/mysoung $DEPLOYPATH
-  - /bin/cp /home/mysoundf/www/mysoung $DEPLOYPATH
+  - /bin/cp -R /home/mysoundf/repositories/mysoung /home/mysoundf/www
+  - /bin/cp /home/mysoundf/repositories/mysoung $DEPLOYPATH
