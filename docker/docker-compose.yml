@@ -1,0 +1,81 @@
+version: "3"
+services:
+  mysound-nginx:
+    image: nginx:latest
+    container_name: mysound-nginx
+    hostname: mysound-nginx
+    ports:
+      - "8070:80"
+    volumes:
+      - ${LOC_WORK_DIR}:/var/www/mysound
+      - ./nginx/mysound.conf:/etc/nginx/conf.d/mysound.conf
+    working_dir: /var/www/mysound
+    links:
+      - mysound-php
+      - mysound-postgres
+    networks:
+      mysound-network:
+        ipv4_address: 120.10.0.2
+      rzk_net:
+  mysound-php:
+    build:
+      context: ./php7.3
+      args:
+        USER_NAME: ${USER_NAME}
+        USER_ID: ${USER_ID:-0}
+        USER_GID: ${USER_GID:-0}
+    container_name: mysound-php
+    volumes:
+      - ${LOC_WORK_DIR}:/var/www/mysound
+      - ./php7.3/php.ini:/usr/local/etc/php/php.ini
+      - ./php7.3/php.ini:/tmp/php.ini
+      - ~/.ssh:/home/${USER_NAME}/.ssh # you need to generate ssh key
+      - ./php7.3/messenger-worker.conf:/etc/supervisor/conf.d/messenger-worker.conf
+    working_dir: "/var/www/mysound"
+    extra_hosts:
+      - "mysound.loc:120.10.0.2"
+      - "mysound-test.loc:120.10.0.2"
+    environment:
+      GIT_USER_NAME: ${GIT_USER_NAME}
+      GIT_USER_EMAIL: ${GIT_USER_EMAIL}
+      XDEBUG_CONFIG: remote_host=172.17.0.1
+      PHP_IDE_CONFIG: "serverName=xdebug-mysound"
+    networks:
+      mysound-network:
+        ipv4_address: 120.10.0.3
+      rzk_net:
+  mysound-postgres:
+    image: postgres:12
+    container_name: mysound-postgres
+    hostname: mysound-postgres
+    ports:
+      - "5438:5432"
+    volumes:
+      - mysound_pg_data:/pgdata
+      - ./postgresql/init.sql:/docker-entrypoint-initdb.d/init.sql
+    environment:
+      POSTGRES_DB: mysound_db
+      POSTGRES_USER: ${PG_USER:-postgres}
+      POSTGRES_PASSWORD: ${PG_PASSWORD:-postgres}
+      PGDATA: /pgdata
+    networks:
+      mysound-network:
+        ipv4_address: 120.10.0.4
+      rzk_net:
+
+
+networks:
+  rzk_net:
+    external: true
+  mysound-network:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 120.10.0.0/24
+    driver_opts:
+      com.docker.network.bridge.name: br_mysound
+volumes:
+  mysound_pg_data:
+    external:
+      name: mysound_pg_data
