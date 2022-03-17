@@ -7,6 +7,7 @@ use App\Entity\Advertising;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -28,8 +29,10 @@ class MainController extends AbstractController
      * @param EntityManagerInterface $entityManager
      * @return Response
      */
-    public function telegram(Client $client, EntityManagerInterface $entityManager): Response
+    public function telegram(Client $client, EntityManagerInterface $entityManager,Request $request): Response
     {
+        var_dump($request);
+        $date = $request->get('date');
         $client->setToken('5234577480:AAHu1axLARUpab9jon_1u_0ya2Fm3Fw-pY0');
 
         $result = $client->getUpdates()['result'];
