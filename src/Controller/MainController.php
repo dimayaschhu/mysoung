@@ -29,27 +29,23 @@ class MainController extends AbstractController
      * @param EntityManagerInterface $entityManager
      * @return Response
      */
-    public function telegram(Client $client, EntityManagerInterface $entityManager,Request $request): Response
+    public function telegram(Client $client, EntityManagerInterface $entityManager, Request $request): Response
     {
-        var_dump($request);
-        $date = $request->get('date');
         $client->setToken('5234577480:AAHu1axLARUpab9jon_1u_0ya2Fm3Fw-pY0');
 
-        $result = $client->getUpdates()['result'];
+        $message = $request->toArray();
+        $advertising = new Advertising();
+        $advertising->setUpdateId($message['update_id']);
+        $advertising->setAuthor($message['message']['from']['username']);
+        $advertising->setText($message['message']['text']);
+        $params = [
+            'chat_id' => $message['message']['chat']['id'],
+            'text'    => 'ваше повідомлення збережено на дошці оголошень'
+        ];
+        $client->sendMessage($params);
 
-        foreach ($result as $message) {
-            $advertising = new Advertising();
-            $advertising->setUpdateId($message['update_id']);
-            $advertising->setAuthor($message['message']['from']['username']);
-            $advertising->setText($message['message']['text']);
-            $params = [
-                'chat_id' => $message['message']['chat']['id'],
-                'text'    => 'ваше повідомлення збережено на дошці оголошень'
-            ];
-            $client->sendMessage($params);
+        $entityManager->persist($advertising);
 
-            $entityManager->persist($advertising);
-        }
         $entityManager->flush();
         return $this->render('main/index.html.twig', [
             'controller_name' => 'MainController',
