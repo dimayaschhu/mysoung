@@ -15,12 +15,55 @@
 {#        {% endblock %}#}
     </head>
     <body>
-    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-        <button class="green"><a href="{{ path('app_logout') }}">Вийти</a></button>
-    {% else %}
-        <button class="green"><a href="{{ path('app_login') }}">Увійти</a></button>
-        <button class="green"><a href="{{ path('app_register') }}">Зарейструватися</a></button>
-    {% endif %}
+    <header>
+        <div class="collapse bg-dark" id="navbarHeader">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-8 col-md-7 py-4">
+                        <h4 class="text-white">Про сайт</h4>
+                        <p class="text-muted">Цей створюєтся без конкретної цілі, якщо буде готовий результат і матиме користь для якогось села, смт або міста перейде до адміністації </p>
+                    </div>
+                    <div class="col-sm-4 offset-md-1 py-4">
+                        <h4 class="text-white">Розділи</h4>
+                        <ul class="list-unstyled">
+                            <li><a href="{{ path('app_advertising')  }}" class="text-white">Дошка оголошень</a></li>
+                            <li><a href="#" class="text-white">Новини</a></li>
+                            <li><a href="#" class="text-white">Сільскі товари</a></li>
+                            <li><a href="#" class="text-white">Бібліотека</a></li>
+                            <li><a href="#" class="text-white">Контакти</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="navbar navbar-dark bg-primary shadow-sm">
+            <div class="container">
+                <div class="col-9"></div>
+                <div class="col-3">
+                    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                        <button class="btn btn-warning"><a href="{{ path('app_logout') }}">Вийти</a></button>
+                    {% else %}
+                        <button class="btn btn-warning"><a href="{{ path('app_login') }}">Увійти</a></button>
+                        <button class="btn btn-warning"><a href="{{ path('app_register') }}">Зарейструватися</a></button>
+                    {% endif %}
+                </div>
+
+            </div>
+        </div>
+        <div class="navbar navbar-dark bg-warning shadow-sm">
+            <div class="container">
+                <a href="{{ path('app_main') }}" class="navbar-brand d-flex align-items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" aria-hidden="true" class="me-2" viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                    <strong>My Sound</strong>
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarHeader" aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            </div>
+        </div>
+
+    </header>
+
         {% block body %}{% endblock %}
     </body>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
