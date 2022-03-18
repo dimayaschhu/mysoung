@@ -20,17 +20,12 @@ class RegistrationController extends AbstractController
     /**
      * @Route("/register", name="app_register")
      */
-    public function register(): Response
+    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher,  EntityManagerInterface $entityManager,ValidatorInterface $validator): Response
     {
-        return $this->render('registration/register.html.twig',['errors' => null]);
-    }
+        if ($request->getMethod() === 'GET'){
+            return $this->render('registration/register.html.twig',['errors' => null]);
 
-
-    /**
-     * @Route("/register-post", name="app_register_post")
-     */
-    public function registerPost(Request $request, UserPasswordHasherInterface $userPasswordHasher,  EntityManagerInterface $entityManager,ValidatorInterface $validator): Response
-    {
+        }
         $user = new User();
 
         $user->setUsername($request->get('username'));
@@ -42,7 +37,7 @@ class RegistrationController extends AbstractController
         );
         $errors = $validator->validate($user);
 
-        if(!empty($errors)){
+        if($errors->count() > 0){
             return $this->render('registration/register.html.twig',['errors' => $errors]);
         }
 
