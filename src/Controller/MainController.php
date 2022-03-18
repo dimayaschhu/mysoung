@@ -67,5 +67,16 @@ class MainController extends AbstractController
         ]);
     }
 
+    /**
+     * @Route("/advertising_info", name="app_advertising_info")
+     * @param EntityManagerInterface $entityManager
+     * @return Response
+     */
+    public function advertisingInfo(EntityManagerInterface $entityManager): Response
+    {
+
+        return $this->render('main/advertising_info.html.twig', []);
+    }
+
 
 }
